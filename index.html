@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiqh Animal Rulings Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --border: #e8e2d8;
+    --text-primary: #1a1611;
+    --text-secondary: #6b6355;
+    --text-muted: #9c9385;
+    --accent: #3d2b1f;
+    --accent-light: #c4a882;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --red: #8b2121;
+    --red-light: #fde8e8;
+    --amber: #7a5c00;
+    --amber-light: #fff8e1;
+    --halal: #2d6a4f;
+    --haram: #8b2121;
+    --makruh: #7a5c00;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-label {
+    font-family: 'Lora', serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .arabic-title {
+    font-size: 22px;
+    margin-bottom: 6px;
+    direction: rtl;
+    color: var(--accent);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 99px;
+    height: 4px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--accent-light);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+    margin-bottom: 32px;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 20px;
+  }
+
+  .question-type-badge {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .question-arabic {
+    font-size: 28px;
+    direction: rtl;
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .question-english {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .question-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  .options {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 15px;
+    color: var(--text-primary);
+    transition: border-color 0.15s, background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent-light);
+    background: #fdf9f5;
+  }
+
+  .option-btn.correct {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .option-btn.wrong {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .option-btn.reveal {
+    background: #f0ede8;
+    border-color: var(--border);
+    color: var(--text-secondary);
+  }
+
+  .option-btn:disabled {
+    cursor: default;
+  }
+
+  .option-indicator {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .option-btn.correct .option-indicator,
+  .option-btn.wrong .option-indicator {
+    opacity: 1;
+  }
+
+  .feedback-block {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .feedback-block.correct {
+    background: var(--green-light);
+    color: var(--green);
+    border-left: 3px solid var(--green);
+  }
+
+  .feedback-block.wrong {
+    background: var(--red-light);
+    color: var(--red);
+    border-left: 3px solid var(--red);
+  }
+
+  .feedback-block.show { display: block; }
+
+  .ruling-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-left: 4px;
+  }
+
+  .ruling-pill.halal { background: var(--green-light); color: var(--green); }
+  .ruling-pill.haram { background: var(--red-light); color: var(--red); }
+  .ruling-pill.makruh { background: var(--amber-light); color: var(--amber); }
+
+  .next-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 15px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    display: none;
+    transition: opacity 0.15s;
+  }
+
+  .next-btn:hover { opacity: 0.88; }
+  .next-btn.show { display: block; }
+
+  .score-screen {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px 32px;
+    display: none;
+  }
+
+  .score-screen.show { display: block; }
+
+  .score-big {
+    font-family: 'Lora', serif;
+    font-size: 64px;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .score-label {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+  }
+
+  .score-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding: 20px;
+    background: var(--bg);
+    border-radius: var(--radius);
+  }
+
+  .score-stat { text-align: center; }
+  .score-stat-num { font-size: 24px; font-weight: 600; color: var(--accent); }
+  .score-stat-lbl { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .restart-btn {
+    padding: 14px 36px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 15px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+  }
+
+  .restart-btn:hover { opacity: 0.88; }
+
+  .missed-list {
+    text-align: left;
+    margin-top: 32px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .missed-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .missed-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .missed-item-arabic {
+    direction: rtl;
+    font-size: 16px;
+    color: var(--accent);
+  }
+
+  .quiz-area { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="arabic-title">اختبار أحكام الذبائح والحيوانات</div>
+    <div class="header-label">Hanafi Fiqh · Animal Rulings</div>
+    <h1>Fiqh Animal Rulings Quiz</h1>
+    <p class="subtitle">Test your knowledge of classical Ḥanafī rulings on animals</p>
+  </header>
+
+  <div class="quiz-area" id="quizArea">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">Question 1 of 20</div>
+
+    <div class="question-card" id="questionCard">
+      <div class="question-type-badge" id="questionTypeBadge"></div>
+      <div id="questionContent"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="feedback-block" id="feedbackBlock"></div>
+    </div>
+
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next question →</button>
+  </div>
+
+  <div class="score-screen" id="scoreScreen">
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-label" id="scoreLabel"></div>
+    <div class="score-breakdown">
+      <div class="score-stat">
+        <div class="score-stat-num" id="statCorrect"></div>
+        <div class="score-stat-lbl">Correct</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-num" id="statWrong"></div>
+        <div class="score-stat-lbl">Incorrect</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-num" id="statTotal"></div>
+        <div class="score-stat-lbl">Total</div>
+      </div>
+    </div>
+    <button class="restart-btn" onclick="startQuiz()">Try again</button>
+    <div class="missed-list" id="missedList"></div>
+  </div>
+</div>
+
+<script>
+const ANIMALS = [
+  { arabic: "كل ذي ناب من السباع", english: "Fanged predators", ruling: "Haram", note: "Explicitly prohibited by hadith." },
+  { arabic: "الضبع", english: "Hyena", ruling: "Haram", note: "Classified under fanged predators by the Ḥanafīs." },
+  { arabic: "الثعلب", english: "Fox", ruling: "Haram", note: "Has fangs; prohibited on the same basis as other predators." },
+  { arabic: "الفيل", english: "Elephant", ruling: "Makruh", note: "Has tusk-like teeth; consumption is disliked but not absolutely forbidden." },
+  { arabic: "غراب الزرع", english: "Agricultural Crow (grain crow)", ruling: "Halal", note: "Feeds on grain rather than carrion, so it is permissible." },
+  { arabic: "الأبقع / الغداف", english: "Carrion Crow", ruling: "Haram", note: "Feeds on carrion, making it impermissible." },
+  { arabic: "العقعق", english: "Magpie", ruling: "Halal", note: "Abū Ḥanīfa permitted it due to its mixed diet." },
+  { arabic: "الضب", english: "Desert Lizard (Dabb)", ruling: "Makruh", note: "The Prophet ﷺ did not eat it; Ḥanafīs consider it disliked." },
+  { arabic: "السلحفاة", english: "Tortoise", ruling: "Makruh", note: "Considered among the vile crawling creatures." },
+  { arabic: "الزنبور", english: "Hornet / Wasp", ruling: "Makruh", note: "A harmful creature; disliked for consumption." },
+  { arabic: "الحمر الأهلية", english: "Domestic Donkey", ruling: "Haram", note: "Prohibited at the Battle of Khaybar by explicit narration." },
+  { arabic: "البغال", english: "Mule", ruling: "Haram", note: "Covered by the same prohibition narration as the donkey." },
+  { arabic: "الفرس", english: "Horse", ruling: "Makruh", note: "Disliked because horses are needed for jihad; not outright forbidden." },
+  { arabic: "الأرنب", english: "Rabbit", ruling: "Halal", note: "The Prophet ﷺ ate rabbit meat, making it clearly permissible." },
+  { arabic: "الخنزير", english: "Pig", ruling: "Haram", note: "Prohibited in the Qur'ān; its very substance is impure." },
+  { arabic: "السمك", english: "Fish", ruling: "Halal", note: "Explicitly exempted from the rules of carrion for sea creatures." },
+  { arabic: "السمك الطافي", english: "Floating Dead Fish", ruling: "Haram", note: "Died without an apparent cause; the Ḥanafī position prohibits it." },
+  { arabic: "الجراد", english: "Locust", ruling: "Halal", note: "Permitted by explicit hadith without requiring ritual slaughter." }
+];
+
+const RULINGS = ["Halal", "Haram", "Makruh"];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getRulingPill(ruling) {
+  return `<span class="ruling-pill ${ruling.toLowerCase()}">${ruling}</span>`;
+}
+
+let questions = [];
+let currentIndex = 0;
+let score = 0;
+let missed = [];
+
+function buildQuestions() {
+  const pool = [];
+  const animals = shuffle(ANIMALS);
+
+  animals.forEach(animal => {
+    const type = Math.random() < 0.5 ? 'translate' : 'ruling';
+    pool.push({ animal, type });
+  });
+
+  return shuffle(pool).slice(0, 20);
+}
+
+function makeTranslateOptions(animal) {
+  const correct = animal.english;
+  const others = shuffle(ANIMALS.filter(a => a.english !== correct)).slice(0, 3).map(a => a.english);
+  return shuffle([correct, ...others]);
+}
+
+function makeRulingOptions() {
+  return shuffle([...RULINGS]);
+}
+
+function startQuiz() {
+  questions = buildQuestions();
+  currentIndex = 0;
+  score = 0;
+  missed = [];
+  document.getElementById('scoreScreen').classList.remove('show');
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = questions.length;
+  const pct = (currentIndex / total) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Question ${currentIndex + 1} of ${total}`;
+
+  const q = questions[currentIndex];
+  const { animal, type } = q;
+
+  const badge = document.getElementById('questionTypeBadge');
+  const content = document.getElementById('questionContent');
+  const optsCont = document.getElementById('optionsContainer');
+  const feedback = document.getElementById('feedbackBlock');
+  const nextBtn = document.getElementById('nextBtn');
+
+  feedback.className = 'feedback-block';
+  feedback.innerHTML = '';
+  nextBtn.className = 'next-btn';
+
+  if (type === 'translate') {
+    badge.textContent = 'Translate the Arabic name';
+    content.innerHTML = `
+      <div class="question-arabic">${animal.arabic}</div>
+      <div class="question-sub">What is this animal in English?</div>
+    `;
+    const opts = makeTranslateOptions(animal);
+    optsCont.innerHTML = opts.map(opt => `
+      <button class="option-btn" onclick="checkAnswer(this, '${opt}', '${animal.english}', 'translate')">
+        <span class="option-indicator">○</span>
+        <span>${opt}</span>
+      </button>
+    `).join('');
+  } else {
+    badge.textContent = 'Identify the Ḥanafī ruling';
+    content.innerHTML = `
+      <div class="question-arabic">${animal.arabic}</div>
+      <div class="question-english">${animal.english}</div>
+      <div class="question-sub">What is the Ḥanafī ruling on this animal?</div>
+    `;
+    const opts = makeRulingOptions();
+    optsCont.innerHTML = opts.map(opt => `
+      <button class="option-btn" onclick="checkAnswer(this, '${opt}', '${animal.ruling}', 'ruling')">
+        <span class="option-indicator">○</span>
+        <span>${opt}</span>
+      </button>
+    `).join('');
+  }
+}
+
+function checkAnswer(btn, chosen, correct, type) {
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => {
+    b.disabled = true;
+    const label = b.querySelector('span:last-child').textContent.trim();
+    if (label === correct) {
+      b.classList.add('correct');
+      b.querySelector('.option-indicator').textContent = '✓';
+    } else if (b === btn && chosen !== correct) {
+      b.classList.add('wrong');
+      b.querySelector('.option-indicator').textContent = '✗';
+    } else {
+      b.classList.add('reveal');
+    }
+  });
+
+  const feedback = document.getElementById('feedbackBlock');
+  const q = questions[currentIndex];
+  const { animal } = q;
+
+  if (chosen === correct) {
+    score++;
+    feedback.className = 'feedback-block correct show';
+    if (type === 'ruling') {
+      feedback.innerHTML = `Correct. The Ḥanafī ruling on <strong>${animal.english}</strong> (${animal.arabic}) is ${getRulingPill(animal.ruling)}. ${animal.note}`;
+    } else {
+      feedback.innerHTML = `Correct. <span style="direction:rtl;display:inline-block;font-size:17px">${animal.arabic}</span> is indeed the <strong>${animal.english}</strong> — ruling: ${getRulingPill(animal.ruling)}.`;
+    }
+  } else {
+    missed.push({ animal, type, chosen, correct });
+    feedback.className = 'feedback-block wrong show';
+    if (type === 'ruling') {
+      feedback.innerHTML = `Not quite. The correct ruling is ${getRulingPill(animal.ruling)}, not <em>${chosen}</em>. ${animal.note}`;
+    } else {
+      feedback.innerHTML = `Not quite. <span style="direction:rtl;display:inline-block;font-size:17px">${animal.arabic}</span> is the <strong>${correct}</strong>, not <em>${chosen}</em>. Ruling: ${getRulingPill(animal.ruling)}.`;
+    }
+  }
+
+  document.getElementById('nextBtn').className = 'next-btn show';
+  document.getElementById('nextBtn').textContent = currentIndex + 1 < questions.length ? 'Next question →' : 'See results →';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= questions.length) {
+    showScore();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showScore() {
+  document.getElementById('quizArea').style.display = 'none';
+  const screen = document.getElementById('scoreScreen');
+  screen.classList.add('show');
+
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('scoreBig').textContent = pct + '%';
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = total - score;
+  document.getElementById('statTotal').textContent = total;
+
+  let label = '';
+  if (pct >= 90) label = 'Excellent — a strong command of the masāʾil.';
+  else if (pct >= 70) label = 'Good — a solid foundation with room to refine.';
+  else if (pct >= 50) label = 'Passing — review the missed cases and try again.';
+  else label = 'Keep at it — repetition is the path to mastery.';
+  document.getElementById('scoreLabel').textContent = label;
+
+  const missedList = document.getElementById('missedList');
+  if (missed.length === 0) {
+    missedList.innerHTML = '';
+    return;
+  }
+
+  missedList.innerHTML = `<div class="missed-title">Missed cases (${missed.length})</div>` +
+    missed.map(m => `
+      <div class="missed-item">
+        <div>
+          <div class="missed-item-arabic">${m.animal.arabic}</div>
+          <div style="font-size:13px;color:#6b6355">${m.animal.english}</div>
+        </div>
+        <div style="text-align:right;font-size:13px;color:#6b6355">
+          ${m.type === 'ruling'
+            ? `Ruling: ${getRulingPill(m.animal.ruling)}`
+            : `${getRulingPill(m.animal.ruling)}`
+          }
+        </div>
+      </div>
+    `).join('');
+}
+
+startQuiz();
+</script>
+</body>
+</html>
